@@ -2,7 +2,7 @@ FROM debian:stable-slim
 
 RUN useradd -r monero \
   && apt-get update -y \
-  && apt-get install -y curl gnupg \
+  && apt-get install -y curl gnupg bzip2 \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
   && set -ex \
@@ -26,12 +26,20 @@ RUN curl -o /usr/local/bin/gosu -fSL https://github.com/tianon/gosu/releases/dow
 
 ENV MONERO_VERSION=v0.12.3.0
 ENV MONERO_DATA=/home/monero/.monero
-ENV MONERO_SHASUM="39d40e2001ca9948f434637c28b3933c0d79c66e2db07ffc4274711ab2d2ae66  monero-linux64-${MONERO_VERSION}.tar.bz2"
+ENV MONERO_SHASUM="72fe937aa2832a0079767914c27671436768ff3c486597c3353a8567d9547487 monero-linux64-${MONERO_VERSION}.tar.bz2"
 
-RUN curl -LO  https://github.com/monero-project/monero/releases/download/${MONERO_VERSION}/monero-linux-x64-${MONERO_VERSION}.tar.bz2 \
-  && echo "${MONERO_SHASUM}" | sha256sum -c \
-  && tar --strip=2 -xzf *.tar.gz -C /usr/local/bin \
-  && rm *.tar.gz
+RUN echo "https://github.com/monero-project/monero/releases/download/${MONERO_VERSION}/monero-linux-x64-${MONERO_VERSION}.tar.bz2"
+RUN echo "${MONERO_SHASUM}"
+
+RUN curl -LO  https://github.com/monero-project/monero/releases/download/${MONERO_VERSION}/monero-linux-x64-${MONERO_VERSION}.tar.bz2
+
+RUN ls *.tar.bz2 \
+  && tar -xjf *.tar.bz2 \
+  && mv "monero-${MONERO_VERSION}"/* /usr/local/bin \
+  && rm *.tar.bz2 \
+  && rmdir "monero-${MONERO_VERSION}"
+
+RUN ls /usr/local/bin
 
 COPY docker-entrypoint.sh /entrypoint.sh
 

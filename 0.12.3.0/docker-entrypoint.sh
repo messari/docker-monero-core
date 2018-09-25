@@ -14,10 +14,10 @@ if [ $(echo "$1" | cut -c1) = "-" ] || [ "$1" = "monerod" ]; then
 
   echo "$0: setting data directory to $MONERO_DATA"
 
-  set -- "$@" -datadir="$MONERO_DATA"
+  set -- "$@" --data-dir="$MONERO_DATA"
 fi
 
-if [ "$1" = "monerod" ] || [ "$1" = "monero-cli" ] || [ "$1" = "monero-tx" ]; then
+if [ "$1" = "monerod" ] || [ "$1" = "monero-wallet-cli" ] || [ "$1" = "monero-wallet-rpc" ]; then
   echo
   exec gosu monero "$@"
 fi
