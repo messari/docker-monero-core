@@ -45,7 +45,8 @@ COPY docker-entrypoint.sh /entrypoint.sh
 
 VOLUME ["/home/monero/.monero"]
 
-EXPOSE 18080 18081
+EXPOSE 18080
+EXPOSE 18081
 
 ENTRYPOINT ["/entrypoint.sh"]
 
